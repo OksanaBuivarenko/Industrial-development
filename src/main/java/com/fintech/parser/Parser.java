@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 @Slf4j
@@ -18,19 +19,25 @@ public class Parser {
         try {
             city = objectMapper.readValue(new File(filePath), City.class);
             log.info("Json file with name {} deserialized successfully.", filePath);
+            log.debug("Object City with slug {} created successfully.", city.getSlug());
+        } catch (FileNotFoundException e) {
+            log.warn("Json file with name {} cannot be found.", filePath);
         } catch (IOException e) {
             log.error("Json file with name {} cannot be deserialized. \n {}", filePath, e.getMessage());
         }
         return city;
     }
 
-    public void toXML(City city) {
-        ObjectMapper objectMapperToXML = new XmlMapper();
-        try {
-            objectMapperToXML.writeValue(new File("city.xml"), city);
-            log.info("Object city with slug {} serialized successfully to xml.", city.getSlug());
-        } catch (IOException e) {
-            log.info("Object city with slug {} cannot be serialized  to xml. \n {}", city.getSlug(), e.getMessage());
+    public void toXML(String filePath) {
+        City city = toObject(filePath);
+        if(city!=null) {
+            ObjectMapper objectMapperToXML = new XmlMapper();
+            try {
+                objectMapperToXML.writeValue(new File("city.xml"), city);
+                log.info("Json file with name {} serialized successfully to xml.", filePath);
+            } catch (Exception e) {
+                log.error("Json file with name {} cannot be serialized to xml. \n {}", filePath, e.getMessage());
+            }
         }
     }
 }

@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class ParserApplication {
     public static void main(String[] args) {
         Parser parser = new Parser();
-        City city = parser.toObject("city.json");
-        parser.toObject("city-error.json");
-        parser.toXML(city);
+        parser.toXML("city.json");
+        parser.toXML("city-error.json");
+        parser.toXML("error.json");
     }
 }
