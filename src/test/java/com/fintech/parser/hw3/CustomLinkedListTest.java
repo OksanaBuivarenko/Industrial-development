@@ -5,8 +5,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -229,32 +227,10 @@ class CustomLinkedListTest {
     }
 
     @Test
-    @DisplayName("Test print all linked element from list Integer")
-    void printListInteger() {
-        PrintStream standardOut = System.out;
-        ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(outputStreamCaptor));
-        listInteger.print();
-        assertEquals("1 -> 2 -> 3", outputStreamCaptor.toString().trim());
-    }
-
-    @Test
-    @DisplayName("Test print all linked element from list String")
-    void printListString() {
-        PrintStream standardOut = System.out;
-        ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(outputStreamCaptor));
-        listString.print();
-        assertEquals("Word1 -> Word2", outputStreamCaptor.toString().trim());
-    }
-
-    @Test
-    @DisplayName("Test print all linked element from empty list String")
-    void printEmptyListString() {
-        PrintStream standardOut = System.out;
-        ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(outputStreamCaptor));
-        emptyListString.print();
-        assertEquals("", outputStreamCaptor.toString().trim());
+    @DisplayName("Test list to string")
+    void toStringTest() {
+        assertEquals("CustomLinkedList: 1 -> 2 -> 3", listInteger.toString());
+        assertEquals("CustomLinkedList: Word1 -> Word2", listString.toString());
+        assertEquals("CustomLinkedList: ", emptyListString.toString());
     }
 }

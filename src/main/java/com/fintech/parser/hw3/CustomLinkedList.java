@@ -86,7 +86,7 @@ public class CustomLinkedList<T> {
         return start == null && end == null;
     }
 
-    private void removeSingle() {
+    private void clear() {
         start = null;
         end = null;
     }
@@ -94,7 +94,7 @@ public class CustomLinkedList<T> {
     public void removeStart() {
         if (!isEmpty()) {
             if (size == 1) {
-                removeSingle();
+                clear();
             } else {
                 Node<T> current = start;
                 start = current.getNext();
@@ -107,7 +107,7 @@ public class CustomLinkedList<T> {
     public void removeEnd() {
         if (!isEmpty()) {
             if (size == 1) {
-                removeSingle();
+                clear();
             } else {
                 Node<T> current = end;
                 end = current.getPrevious();
@@ -147,14 +147,18 @@ public class CustomLinkedList<T> {
         size += list.size;
     }
 
-    public void print() {
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("CustomLinkedList: ");
         if (!isEmpty()) {
             Node<T> node = start;
             while (node.getNext() != null) {
-                System.out.print(node.getData() + " -> ");
+                builder.append(node.getData() + " -> ");
                 node = node.getNext();
             }
-            System.out.println(end.getData());
+            builder.append(end.getData());
         }
+        return builder.toString();
     }
 }

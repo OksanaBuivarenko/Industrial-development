@@ -21,7 +21,7 @@ public class Main {
         list.removeStart();
         list.removeEnd();
 
-        list.print();
+        System.out.println(list.toString());
 
         System.out.println(list.contains("Word-0"));
         System.out.println(list.contains("Word-1"));
@@ -30,7 +30,7 @@ public class Main {
         List<String> newList = List.of("Word5", "Word6", "Word7");
         list.addAll(newList);
         System.out.println("List size after add newList - " + list.getSize());
-        list.print();
+        System.out.println(list.toString());
 
         System.out.println("List size before add newLinkedList - " + list.getSize());
         CustomLinkedList<String> newLinkedList = new CustomLinkedList<>();
@@ -40,7 +40,7 @@ public class Main {
         list.addAll(newLinkedList);
         System.out.println("List size after add newLinkedList - " + list.getSize());
 
-        list.print();
+        System.out.println(list.toString());
 
         List<String> l1 = List.of("S1", "S2");
         List<String> l2 = List.of("S3", "S4");
@@ -57,6 +57,19 @@ public class Main {
                     return acc;
                 }
         );
-        reduceList.print();
+        System.out.println(reduceList.toString());
+
+        CustomLinkedList<String> reduceList1 = l1.stream().reduce(
+                new CustomLinkedList<>(),
+                (acc, el) -> {
+                    acc.addEnd(el);
+                    return acc;
+                },
+                (acc, el) -> {
+                    acc.addAll(el);
+                    return acc;
+                }
+        );
+        System.out.println(reduceList1.toString());
     }
 }
