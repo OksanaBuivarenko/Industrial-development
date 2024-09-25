@@ -1,4 +1,4 @@
-package com.fintech.parser.hw5.exseption;
+package com.fintech.parser.hw5.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
