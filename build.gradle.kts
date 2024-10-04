@@ -25,8 +25,13 @@ repositories {
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter")
+	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	implementation("com.fasterxml.jackson.core:jackson-databind:2.17.2")
 	implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.17.2")
+	implementation(project(":timed-starter"))
+	implementation("org.mapstruct:mapstruct:1.6.2")
+	annotationProcessor("org.mapstruct:mapstruct-processor:1.6.2")
+	annotationProcessor( "org.projectlombok:lombok-mapstruct-binding:0.2.0")
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")

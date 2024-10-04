@@ -1,0 +1,6 @@
+starter:
+  enabled: true
+
+url:
+  locations: https://kudago.com/public-api/v1.4/locations/
+  categories: https://kudago.com/public-api/v1.2/place-categories/
