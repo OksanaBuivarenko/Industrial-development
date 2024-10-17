@@ -1,7 +1,7 @@
 package com.fintech.interaction.service;
 
-import java.util.List;
+import java.util.Map;
 
-public interface HttpService<T> {
-    List<T> getListByApi();
+public interface HttpService<K, V> {
+    Map<K, V> getMapByApi();
 }

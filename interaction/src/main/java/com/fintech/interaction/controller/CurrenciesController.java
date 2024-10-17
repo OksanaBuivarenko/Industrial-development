@@ -36,7 +36,7 @@ public class CurrenciesController {
     @GetMapping("/rates/{code}")
     public RatesRs getRatesByCode(@PathVariable @Parameter(description = "Currency code",
             example = "USD") String code) {
-        return currencyService.getRatesByCode(code);
+        return currencyService.getRatesRsByCode(code);
     }
 
     @Operation(description = "Currency conversion at the current rate")

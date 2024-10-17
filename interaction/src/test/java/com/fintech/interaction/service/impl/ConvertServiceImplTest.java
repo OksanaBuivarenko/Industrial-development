@@ -2,7 +2,6 @@ package com.fintech.interaction.service.impl;
 
 import com.fintech.interaction.dto.request.ConvertCurrenciesRq;
 import com.fintech.interaction.dto.response.ConvertCurrencyRs;
-import com.fintech.interaction.model.Valute;
 import com.fintech.interaction.service.CurrencyService;
 import com.fintech.interaction.service.FormattingService;
 import org.junit.jupiter.api.*;
@@ -19,26 +18,10 @@ class ConvertServiceImplTest {
 
     private final ConvertServiceImpl convertService = new ConvertServiceImpl(currencyService, formattingService);
 
-    private Valute usd;
-
-    private Valute azn;
-
-    @BeforeEach
-    public  void setUp() {
-        usd = new Valute("1", "1", "USD", "n", "n","1", 96.1079);
-        azn = new Valute("1", "1", "USD", "n", "n","1", 56.5341);
-    }
-
-    @AfterEach
-    public void tearDown() {
-        usd = null;
-        azn = null;
-    }
-
     @Test
     void getConvertCurrencyRs() {
-        when(currencyService.getValuteByCode("USD")).thenReturn(usd);
-        when(currencyService.getValuteByCode("AZN")).thenReturn(azn);
+        when(currencyService.getRatesByCode("USD")).thenReturn(96.1079);
+        when(currencyService.getRatesByCode("AZN")).thenReturn(56.5341);
         Double amount = (96.1079/56.5341)*10.0;
         when(formattingService.formatting(amount)).thenReturn(17.0);
         ConvertCurrenciesRq currenciesRq = ConvertCurrenciesRq.builder()
@@ -60,8 +43,8 @@ class ConvertServiceImplTest {
 
     @Test
     void convertAmountUSDtoAZN() {
-        when(currencyService.getValuteByCode("USD")).thenReturn(usd);
-        when(currencyService.getValuteByCode("AZN")).thenReturn(azn);
+        when(currencyService.getRatesByCode("USD")).thenReturn(96.1079);
+        when(currencyService.getRatesByCode("AZN")).thenReturn(56.5341);
         Double amount = (96.1079/56.5341)*10.0;
         when(formattingService.formatting(amount)).thenReturn(17.0);
         ConvertCurrenciesRq currenciesRq = ConvertCurrenciesRq.builder()
@@ -74,13 +57,13 @@ class ConvertServiceImplTest {
 
         assertEquals(17.0, result);
         verify(formattingService,times(1)).formatting(amount);
-        verify(currencyService, times(1)).getValuteByCode("USD");
-        verify(currencyService, times(1)).getValuteByCode("AZN");
+        verify(currencyService, times(1)).getRatesByCode("USD");
+        verify(currencyService, times(1)).getRatesByCode("AZN");
     }
 
     @Test
     void convertAmountUSDtoRUB() {
-        when(currencyService.getValuteByCode("USD")).thenReturn(usd);
+        when(currencyService.getRatesByCode("USD")).thenReturn(96.1079);
         Double amount = 96.1079*10.0;
         when(formattingService.formatting(amount)).thenReturn(969.5);
         ConvertCurrenciesRq currenciesRq = ConvertCurrenciesRq.builder()
@@ -93,12 +76,12 @@ class ConvertServiceImplTest {
 
         assertEquals(969.5, result);
         verify(formattingService,times(1)).formatting(amount);
-        verify(currencyService, times(1)).getValuteByCode("USD");
+        verify(currencyService, times(1)).getRatesByCode("USD");
     }
 
     @Test
     void convertAmountRUBtoUSD() {
-        when(currencyService.getValuteByCode("USD")).thenReturn(usd);
+        when(currencyService.getRatesByCode("USD")).thenReturn(96.1079);
         Double amount = (1/96.1079)*10.0;
         when(formattingService.formatting(amount)).thenReturn(0.1);
         ConvertCurrenciesRq currenciesRq = ConvertCurrenciesRq.builder()
@@ -111,7 +94,7 @@ class ConvertServiceImplTest {
 
         assertEquals(0.1, result);
         verify(formattingService,times(1)).formatting(amount);
-        verify(currencyService, times(1)).getValuteByCode("USD");
+        verify(currencyService, times(1)).getRatesByCode("USD");
     }
 
     @Test

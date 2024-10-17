@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
@@ -15,6 +16,9 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.junit.jupiter.api.Assertions.*;
 
+@TestPropertySource(properties = {
+        "cache.enabled=false"
+})
 @SpringBootTest
 class ExchangeRateServiceTest {
     @Autowired
@@ -47,13 +51,13 @@ class ExchangeRateServiceTest {
     @Test
     void getListByApiSuccess() {
         stubFor200();
-        assertEquals(43, exchangeRateService.getListByApi().size());
+        assertEquals(43, exchangeRateService.getMapByApi().size());
     }
 
     @Test
     void getListByApiFail() {
         stubFor503();
-        Exception ex = assertThrows(WebClientResponseException.class,() -> exchangeRateService.getListByApi());
+        Exception ex = assertThrows(WebClientResponseException.class,() -> exchangeRateService.getMapByApi());
         assertTrue(ex.getMessage().contains("503 Service Unavailable from GET"));
     }
 }

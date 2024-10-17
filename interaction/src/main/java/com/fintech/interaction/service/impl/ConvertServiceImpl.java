@@ -30,14 +30,14 @@ public class ConvertServiceImpl implements ConvertService {
         double toValuteRate;
         double convertAmount;
         if (convertRq.getFromCurrency().equals("RUB")) {
-            toValuteRate = currencyService.getValuteByCode(convertRq.getToCurrency()).getVunitRate();
+            toValuteRate = currencyService.getRatesByCode(convertRq.getToCurrency());
             convertAmount = getRateRUBtoCurrency(toValuteRate) * convertRq.getAmount();
         } else if (convertRq.getToCurrency().equals("RUB")) {
-            fromValuteRate = currencyService.getValuteByCode(convertRq.getFromCurrency()).getVunitRate();
+            fromValuteRate = currencyService.getRatesByCode(convertRq.getFromCurrency());
             convertAmount = fromValuteRate * convertRq.getAmount();
         } else {
-            fromValuteRate = currencyService.getValuteByCode(convertRq.getFromCurrency()).getVunitRate();
-            toValuteRate = currencyService.getValuteByCode(convertRq.getToCurrency()).getVunitRate();
+            fromValuteRate = currencyService.getRatesByCode(convertRq.getFromCurrency());
+            toValuteRate = currencyService.getRatesByCode(convertRq.getToCurrency());
             convertAmount = getCrossRate(fromValuteRate, toValuteRate) * convertRq.getAmount();
         }
         return formattingService.formatting(convertAmount);

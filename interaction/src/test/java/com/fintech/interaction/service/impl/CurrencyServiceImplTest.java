@@ -2,69 +2,58 @@ package com.fintech.interaction.service.impl;
 
 import com.fintech.interaction.dto.response.RatesRs;
 import com.fintech.interaction.exception.ValuteNotFoundException;
-import com.fintech.interaction.mapper.ValuteMapper;
-import com.fintech.interaction.model.Valute;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class CurrencyServiceImplTest {
 
-    private final ExchangeRateService exchangeRateService = Mockito.mock(ExchangeRateService.class);
+    private final ExchangeRateService exchangeRateService = mock(ExchangeRateService.class);
 
-    private final ValuteMapper valuteMapper = Mockito.mock(ValuteMapper.class);
+    private final CurrencyServiceImpl currencyService = new CurrencyServiceImpl(exchangeRateService);
 
-    private final CurrencyServiceImpl currencyService = new CurrencyServiceImpl(exchangeRateService, valuteMapper);
-
-    private List<Valute> valutes;
-
-    private Valute valute;
+    private Map<String, Double> valutes;
 
     @BeforeEach
     public void setUp() {
-        valutes = new ArrayList<>();
-        valute = new Valute("1", "1", "USD", "n", "n","1", 96.1079);
-        valutes.add(valute);
-        valutes.add(new Valute("2", "1", "AZN", "n", "n","1", 56.5341));
+        valutes = new HashMap<>();
+        valutes.put("USD", 96.1079);
+        valutes.put("AZN", 56.5341);
     }
 
     @AfterEach
     public void tearDown() {
         valutes = null;
-        valute = null;
     }
 
     @Test
-    void getRatesByCode() {
+    void getRatesRsByCode() {
         RatesRs ratesRs = RatesRs.builder().rate("96.1079").currency("USD").build();
-        when(valuteMapper.toDto(valute)).thenReturn(ratesRs);
-        when(exchangeRateService.getListByApi()).thenReturn(valutes);
+        when(exchangeRateService.getMapByApi()).thenReturn(valutes);
 
-        assertEquals(ratesRs, currencyService.getRatesByCode("USD"));
+        assertEquals(ratesRs, currencyService.getRatesRsByCode("USD"));
     }
 
     @Test
-    void getValuteByIsPresentCodeSuccess() {
-        when(exchangeRateService.getListByApi()).thenReturn(valutes);
+    void getRatesByIsPresentCodeSuccess() {
+        when(exchangeRateService.getMapByApi()).thenReturn(valutes);
 
-        Valute result = currencyService.getValuteByCode("USD");
+        Double result = currencyService.getRatesByCode("USD");
 
-        assertEquals("1", result.getId());
-        verify(exchangeRateService, times(1)).getListByApi();
+        assertEquals(96.1079, result);
+        verify(exchangeRateService, times(1)).getMapByApi();
     }
 
     @Test
-    void getValuteByIsNotPresentCodeFail() {
-        when(exchangeRateService.getListByApi()).thenReturn(valutes);
+    void getRatesByIsNotPresentCodeFail() {
+        when(exchangeRateService.getMapByApi()).thenReturn(valutes);
 
-        Exception ex = assertThrows(ValuteNotFoundException.class,() -> currencyService.getValuteByCode("USDUSD"));
+        Exception ex = assertThrows(ValuteNotFoundException.class,() -> currencyService.getRatesByCode("USDUSD"));
         assertEquals("Currency with code USDUSD was not found in the Central Bank", ex.getMessage());
     }
 }
