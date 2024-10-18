@@ -1,0 +1,44 @@
+server:
+    port: 8888
+
+cbr:
+    base_url: https://www.cbr-xml-daily.ru
+    url: /daily_utf8.xml
+
+resilience4j:
+    ratelimiter:
+        configs:
+            default:
+                registerHealthIndicator: true
+                limitForPeriod: 10
+                limitRefreshPeriod: 1s
+                timeoutDuration: 0
+        instances:
+            basic:
+                baseConfig: default
+    circuitbreaker:
+        configs:
+            default:
+                registerHealthIndicator: true
+                slidingWindowSize: 10
+                minimumNumberOfCalls: 5
+                permittedNumberOfCallsInHalfOpenState: 3
+                automaticTransitionFromOpenToHalfOpenEnabled: true
+                waitDurationInOpenState: 5s
+                failureRateThreshold: 50
+                eventConsumerBufferSize: 10
+            shared:
+                slidingWindowSize: 100
+                permittedNumberOfCallsInHalfOpenState: 30
+                waitDurationInOpenState: 1s
+                failureRateThreshold: 50
+                eventConsumerBufferSize: 10
+        instances:
+            basic:
+                baseConfig: default
+
+#springdoc:
+#    override-with-generic-response: false
+
+cache:
+    enabled: true
