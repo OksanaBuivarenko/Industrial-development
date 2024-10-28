@@ -31,7 +31,7 @@ public class FillAllStorages {
     private Integer period;
 
     @TimedAnnotation
-    @EventListener(ContextRefreshedEvent.class)
+    //@EventListener(ContextRefreshedEvent.class)
     public void fillStoragesOnStart() {
         CountDownLatch latch = new CountDownLatch(2);
         try {
@@ -53,7 +53,7 @@ public class FillAllStorages {
         fixedExecutor.shutdown();
     }
 
-    @EventListener(ContextStartedEvent.class)
+    //@EventListener(ContextStartedEvent.class)
     public void schedule() {
         for (FillStorageService service : fillStorageServiceList) {
             scheduledExecutor.scheduleAtFixedRate(() -> service.fillStorage(),period, period, TimeUnit.MINUTES);

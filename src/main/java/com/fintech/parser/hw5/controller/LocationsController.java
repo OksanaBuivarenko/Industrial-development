@@ -38,6 +38,11 @@ public class LocationsController {
         return locationsService.updateLocation(id, locationRq);
     }
 
+    @PutMapping("/restore/{id}")
+    public LocationsRs restoreCategory(@PathVariable String id) {
+        return locationsService.restoreCategory(id);
+    }
+
     @DeleteMapping("/{id}")
     public DeleteRs deleteLocation(@PathVariable String id) {
         return locationsService.deleteLocation(id);

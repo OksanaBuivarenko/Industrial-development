@@ -20,4 +20,6 @@ public interface LocationsService {
     DeleteRs deleteLocation(String id);
 
     void save(Locations locations);
+
+    LocationsRs restoreCategory(String id);
 }
