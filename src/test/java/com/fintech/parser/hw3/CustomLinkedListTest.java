@@ -10,25 +10,25 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CustomLinkedListTest {
-    private CustomLinkedList<String> listString;
-    private CustomLinkedList<Integer> listInteger;
-    private CustomLinkedList<String> emptyListString;
-    private CustomLinkedList<Integer> emptyListInteger;
-    private CustomLinkedList<String> singleElementListString;
-    private CustomLinkedList<Integer> singleElementListInteger;
+    private CustomLinkedListImpl<String> listString;
+    private CustomLinkedListImpl<Integer> listInteger;
+    private CustomLinkedListImpl<String> emptyListString;
+    private CustomLinkedListImpl<Integer> emptyListInteger;
+    private CustomLinkedListImpl<String> singleElementListString;
+    private CustomLinkedListImpl<Integer> singleElementListInteger;
 
     @BeforeEach
     void setUp() {
-        listString = new CustomLinkedList<>();
+        listString = new CustomLinkedListImpl<>();
         listString.addEnd("Word1");
         listString.addEnd("Word2");
-        listInteger = new CustomLinkedList<>();
+        listInteger = new CustomLinkedListImpl<>();
         listInteger.addAll(List.of(1,2,3));
-        emptyListInteger = new CustomLinkedList<>();
-        emptyListString = new CustomLinkedList<>();
-        singleElementListInteger = new CustomLinkedList<>();
+        emptyListInteger = new CustomLinkedListImpl<>();
+        emptyListString = new CustomLinkedListImpl<>();
+        singleElementListInteger = new CustomLinkedListImpl<>();
         singleElementListInteger.addEnd(1);
-        singleElementListString = new CustomLinkedList<>();
+        singleElementListString = new CustomLinkedListImpl<>();
         singleElementListString.addEnd("Word1");
     }
 
@@ -209,7 +209,7 @@ class CustomLinkedListTest {
     @Test
     @DisplayName("Test add all element fromm CustomLinkedList")
     void testAddAll() {
-        CustomLinkedList<String> newLinkedListString = new CustomLinkedList<>();
+        CustomLinkedListImpl<String> newLinkedListString = new CustomLinkedListImpl<>();
         newLinkedListString.addEnd("Word3");
         newLinkedListString.addEnd("Word4");
         listString.addAll(newLinkedListString);
@@ -217,7 +217,7 @@ class CustomLinkedListTest {
         assertTrue(listString.contains("Word3"));
         assertEquals("Word4", listString.getEnd());
 
-        CustomLinkedList<Integer> newLinkedListInteger = new CustomLinkedList<>();
+        CustomLinkedListImpl<Integer> newLinkedListInteger = new CustomLinkedListImpl<>();
         newLinkedListInteger.addEnd(4);
         newLinkedListInteger.addEnd(5);
         listInteger.addAll(newLinkedListInteger);

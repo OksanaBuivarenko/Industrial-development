@@ -6,6 +6,6 @@ import org.springframework.context.event.EventListener;
 
 public interface FillStorageService {
 
-    @EventListener(ContextRefreshedEvent.class)
+    //@EventListener(ContextRefreshedEvent.class)
     void fillStorage();
 }

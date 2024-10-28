@@ -1,5 +1,6 @@
 package com.fintech.parser.hw5.repository;
 
+import com.fintech.parser.hw5.service.observer.Observer;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
