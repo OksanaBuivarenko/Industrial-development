@@ -3,7 +3,6 @@ package com.fintech.multithreading.service.impl;
 import com.fintech.multithreading.model.EventList;
 import com.fintech.multithreading.model.Events;
 import com.fintech.multithreading.service.EventHttpService;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -12,35 +11,16 @@ import org.springframework.http.MediaType;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.WebClientException;
 import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Semaphore;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class ExecuteEventsService implements EventHttpService {
-
-    private static Integer permits = 1;
-    private static Boolean fair = false;
-
-    @Value("${rate_limiter.permits}")
-    private Integer injectionPermits;
-
-    @Value("${rate_limiter.fair}")
-    private Boolean injectionFair;
-
-    @PostConstruct
-    public void init() {
-        permits = injectionPermits;
-        fair = injectionFair;
-    }
-
-    private static final Semaphore SEMAPHORE = new Semaphore(permits, fair);
 
     private final WebClient webClient;
 
@@ -85,16 +65,13 @@ public class ExecuteEventsService implements EventHttpService {
         return resultList;
     }
 
-
+    @Override
     public Mono<List<Events>> getListByApiMono(String actualSince, String actualUntil) {
         WebClient client = WebClient.builder()
                 .baseUrl("https://kudago.com/public-api/")
                 .clientConnector(new ReactorClientHttpConnector(HttpClient.create().followRedirect(true)))
                 .build();
-
-        try {
-            SEMAPHORE.acquire();
-            return client
+            return  client
                     .get()
                     .uri(uriBuilder -> uriBuilder
                             .path(url)
@@ -108,11 +85,5 @@ public class ExecuteEventsService implements EventHttpService {
                     .retrieve()
                     .bodyToMono(EventList.class)
                     .map(EventList::getResults);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            throw new RuntimeException(e.getMessage());
-        } finally {
-            SEMAPHORE.release();
-        }
     }
 }

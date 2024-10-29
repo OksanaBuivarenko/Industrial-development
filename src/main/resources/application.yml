@@ -7,4 +7,4 @@ url:
 
 executor:
   thread_count: 5
-  period: 60
+  durations:  PT1H

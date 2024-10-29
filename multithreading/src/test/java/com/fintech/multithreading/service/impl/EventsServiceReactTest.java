@@ -6,6 +6,7 @@ import com.fintech.multithreading.dto.response.EventsRs;
 import com.fintech.multithreading.mapper.EventsMapper;
 import com.fintech.multithreading.model.Dates;
 import com.fintech.multithreading.model.Events;
+import com.fintech.multithreading.service.RateLimiterService;
 import com.fintech.multithreading.service.TimeService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class EventsServiceReactTest {
+    private final RateLimiterService rateLimiterService = Mockito.mock(RateLimiterService.class);
 
     private final ExecuteEventsService executeEventsService = Mockito.mock(ExecuteEventsService.class);
 
@@ -30,7 +32,7 @@ class EventsServiceReactTest {
 
     private final TimeService timeService = Mockito.mock(TimeService.class);
 
-    private final EventsServiceReact eventsService = new EventsServiceReact(executeEventsService,
+    private final EventsServiceReact eventsService = new EventsServiceReact(rateLimiterService, executeEventsService,
             executeConvertCurrency, eventsMapper, timeService);
 
     private EventsRq eventsRq;

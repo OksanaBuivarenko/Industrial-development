@@ -39,20 +39,20 @@ public class EventsServiceImpl implements EventsService {
 
     @SneakyThrows
     public List<Events> getFiltredEventsList(EventsRq eventsRq) {
-        CompletableFuture<Double> completableFuture1 = CompletableFuture
+        CompletableFuture<Double> amount = CompletableFuture
                 .supplyAsync(() -> getAmount(eventsRq));
 
-        CompletableFuture<List<Events>> completableFuture2 = CompletableFuture
+        CompletableFuture<List<Events>> eventsList = CompletableFuture
                 .supplyAsync(() -> getEventsList(eventsRq));
 
         List<Events> result = new ArrayList<>();
-        BiConsumer<Double, List<Events>> stringBiConsumer = (budget, eventList) ->
+        BiConsumer<Double, List<Events>> filterEventByBudgetConsumer = (budget, eventList) ->
                 eventList.stream()
                         .filter(event -> getPrice(event.getPrice()) <= budget)
                         .map(result::add)
                         .collect(Collectors.toList());
 
-        completableFuture1.thenAcceptBoth(completableFuture2, stringBiConsumer).get();
+        amount.thenAcceptBoth(eventsList, filterEventByBudgetConsumer).get();
 
         return result;
     }

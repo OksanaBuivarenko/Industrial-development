@@ -17,8 +17,7 @@ public class ExecutorConfig {
     private Integer threadCount;
 
     private final ThreadFactory threadFactory = new ThreadFactoryBuilder()
-            .setNameFormat("fill_storage_thread-%d")
-            .setDaemon(true)
+            .setNameFormat("dataInitializingExecutorService-%d")
             .build();
 
     @Bean("fixedExecutor")

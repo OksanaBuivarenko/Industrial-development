@@ -1,7 +1,6 @@
 package com.fintech.parser.hw5.service.impl;
 
 import com.fintech.parser.hw5.service.FillStorageService;
-import com.fintech.timedstarter.annotation.TimedAnnotation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,11 +9,12 @@ import org.springframework.context.event.ContextStartedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
+
+import static java.util.concurrent.CompletableFuture.supplyAsync;
 
 @Slf4j
 @Service
@@ -27,36 +27,32 @@ public class FillAllStorages {
 
     private final ScheduledExecutorService scheduledExecutor;
 
-    @Value("${executor.period}")
-    private Integer period;
+    @Value("${executor.durations}")
+    private Duration duration;
 
-    @TimedAnnotation
     @EventListener(ContextRefreshedEvent.class)
     public void fillStoragesOnStart() {
-        CountDownLatch latch = new CountDownLatch(2);
         try {
+            List<CompletableFuture<Void>> futureList = new ArrayList<>();
             for (FillStorageService service : fillStorageServiceList) {
-                fixedExecutor.submit(() -> {
-                    try {
+                CompletableFuture<Void> cf = supplyAsync(() -> {
                         service.fillStorage();
                         log.info("Method fill work  from thread " + getCurrentThreadName());
-                    } finally {
-                        latch.countDown();
-                    }
-                });
+                    return null;
+                }, fixedExecutor);
+                futureList.add(cf);
             }
-            latch.await();
-            } catch (Exception e) {
-                log.error("Fill storages failed. " + e.getMessage());
-                throw new RuntimeException("Fill storages failed");
-            }
-        fixedExecutor.shutdown();
+        CompletableFuture.allOf(futureList.toArray(new CompletableFuture[futureList.size()])).join();
+        } catch (Exception e) {
+            log.error("Fill storages failed. " + e.getMessage());
+            throw new RuntimeException("Fill storages failed");
+        }
     }
 
     @EventListener(ContextStartedEvent.class)
     public void schedule() {
         for (FillStorageService service : fillStorageServiceList) {
-            scheduledExecutor.scheduleAtFixedRate(() -> service.fillStorage(),period, period, TimeUnit.MINUTES);
+            scheduledExecutor.scheduleAtFixedRate(() -> service.fillStorage(), duration.toMillis(), duration.toMillis(), TimeUnit.MINUTES);
             log.info("Method schedule work from thread " + getCurrentThreadName());
         }
     }

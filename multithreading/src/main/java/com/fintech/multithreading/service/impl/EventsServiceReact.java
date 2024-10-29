@@ -7,6 +7,7 @@ import com.fintech.multithreading.dto.response.EventsRs;
 import com.fintech.multithreading.mapper.EventsMapper;
 import com.fintech.multithreading.model.Events;
 import com.fintech.multithreading.service.EventsService;
+import com.fintech.multithreading.service.RateLimiterService;
 import com.fintech.multithreading.service.TimeService;
 import jakarta.annotation.Priority;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -27,6 +29,7 @@ import static org.springframework.core.Ordered.LOWEST_PRECEDENCE;
 @Service
 @RequiredArgsConstructor
 public class EventsServiceReact implements EventsService {
+    private final RateLimiterService rateLimiterService;
 
     private final ExecuteEventsService executeEventsService;
 
@@ -88,6 +91,6 @@ public class EventsServiceReact implements EventsService {
         if (events.getDateTo() != null) {
             dateTo = String.valueOf(events.getDateTo().getTime() / 1000);
         }
-        return executeEventsService.getListByApiMono(dateFrom, dateTo);
+        return (Mono<List<Events>>) rateLimiterService.limited(dateFrom, dateTo);
     }
 }
