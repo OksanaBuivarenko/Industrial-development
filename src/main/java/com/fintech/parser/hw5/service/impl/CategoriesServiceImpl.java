@@ -9,6 +9,7 @@ import com.fintech.parser.hw5.mapper.CategoriesMapper;
 import com.fintech.parser.hw5.model.Categories;
 import com.fintech.parser.hw5.repository.CategoriesRepository;
 import com.fintech.parser.hw5.service.CategoriesService;
+import com.fintech.parser.hw5.service.memento.CategoriesHistory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -24,10 +25,13 @@ public class CategoriesServiceImpl implements CategoriesService {
 
     private final CategoriesRepository categoriesRepository;
 
+    private final CategoriesHistory categoriesHistory;
+
     @Autowired
     @Lazy
-    public CategoriesServiceImpl(CategoriesRepository categoriesRepository) {
+    public CategoriesServiceImpl(CategoriesRepository categoriesRepository, CategoriesHistory categoriesHistory) {
         this.categoriesRepository = categoriesRepository;
+        this.categoriesHistory = categoriesHistory;
     }
 
     @Override
@@ -73,6 +77,7 @@ public class CategoriesServiceImpl implements CategoriesService {
     @Override
     public CategoriesRs updateCategory(Long id, CategoriesRq categoriesRq) {
         Categories categories = getCategoryById(id);
+        categoriesHistory.save(categories);
         if (!categoriesRq.getName().isEmpty() && !categoriesRq.getName().equals(categories.getName())) {
             categories.setName(categoriesRq.getName());
             log.debug("Categories with id " + id + " update name");
@@ -85,8 +90,15 @@ public class CategoriesServiceImpl implements CategoriesService {
     }
 
     @Override
+    public CategoriesRs restoreCategory(Long id) {
+        categoriesHistory.undo(getCategoryById(id));
+        return getCategoryRsById(id);
+    }
+
+    @Override
     public DeleteRs deleteCategory(Long id) {
         if (categoriesRepository.containsId(id)) {
+            categoriesHistory.delete(id);
             categoriesRepository.delete(id);
             log.info("Categories with id " + id + " delete successfully");
             return DeleteRs.builder().message("Categories with id " + id + " delete successfully").build();
