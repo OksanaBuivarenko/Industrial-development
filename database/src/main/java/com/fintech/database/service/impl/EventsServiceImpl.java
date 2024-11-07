@@ -41,7 +41,7 @@ public class EventsServiceImpl implements EventsService {
                         .and(Specs.eq(Events_.locations, Locations_.name, eventsFilterRq.getLocations()))
                         .and(Specs.greaterEq(Events_.dates, eventsFilterRq.getFromDate()))
                         .and(Specs.lessEq(Events_.dates, eventsFilterRq.getToDate())),
-                        Sort.by(Sort.Direction.ASC, "dates"));
+                Sort.by(Sort.Direction.ASC, "dates"));
         return PageRs.<List<EventsRs>>builder()
                 .data(list.stream().map(eventsMapper::toDto).collect(Collectors.toList()))
                 .build();
@@ -81,16 +81,16 @@ public class EventsServiceImpl implements EventsService {
     @Override
     public PageRs<EventsRs> updateEvents(Long id, EventsRq eventsRq) {
         Events events = getEventsById(id);
-        if (eventsRq.getName()!=null && !eventsRq.getName().trim().isEmpty()) {
+        if (eventsRq.getName() != null && !eventsRq.getName().trim().isEmpty()) {
             events.setName(eventsRq.getName());
         }
-        if (eventsRq.getDates()!=null) {
+        if (eventsRq.getDates() != null) {
             events.setDates(eventsRq.getDates());
         }
-        if (eventsRq.getPrice()!=null && !eventsRq.getPrice().trim().isEmpty()) {
+        if (eventsRq.getPrice() != null && !eventsRq.getPrice().trim().isEmpty()) {
             events.setPrice(eventsRq.getPrice());
         }
-        if (eventsRq.getLocations()!=null && !eventsRq.getLocations().trim().isEmpty()) {
+        if (eventsRq.getLocations() != null && !eventsRq.getLocations().trim().isEmpty()) {
             Locations locations;
             try {
                 locations = locationsService.getLocationsByName(eventsRq.getLocations());
@@ -116,10 +116,10 @@ public class EventsServiceImpl implements EventsService {
     @Override
     public List<Events> getEventsListFromEventsDtoList(List<EventsDto> dtoList) {
         return dtoList.stream().map(dto ->
-             {
-                Locations locations = locationsService.getLocationsByNameFromDto(dto.getLocation());
-                return eventsMapper.toEntityFromKudagoDto(dto, locations);
-             }
+                {
+                    Locations locations = locationsService.getLocationsByNameFromDto(dto.getLocation());
+                    return eventsMapper.toEntityFromKudagoDto(dto, locations);
+                }
         ).collect(Collectors.toList());
     }
 

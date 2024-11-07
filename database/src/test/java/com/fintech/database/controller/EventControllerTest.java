@@ -10,6 +10,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithAnonymousUser;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -22,9 +24,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @Sql(scripts = "/sql/insert.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(scripts = "/sql/clean.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = TestContainers.class)
 @AutoConfigureMockMvc
-class EventControllerTest extends TestContainers {
+class EventControllerTest {
 
     ObjectMapper mapper = new ObjectMapper();
 
@@ -34,6 +36,7 @@ class EventControllerTest extends TestContainers {
     @Autowired
     MockMvc mockMvc;
 
+    @WithMockUser
     @Test
     void getFilterEventsByLocationSuccess() throws Exception {
         this.mockMvc.perform(get("http://localhost:" + port + "/api/v1/events?locations=Moscow"))
@@ -42,15 +45,45 @@ class EventControllerTest extends TestContainers {
                 .andExpect(jsonPath("$.length()").value(2));
     }
 
+    @WithAnonymousUser
+    @Test
+    void getFilterEventsByLocationWithAnonymousUserFail() throws Exception {
+        this.mockMvc.perform(get("http://localhost:" + port + "/api/v1/events?locations=Moscow"))
+                .andDo(print())
+                .andExpectAll(status().isUnauthorized());
+    }
+
+    @WithMockUser
+    @Test
+    void getFilterEventsByNameAndPastDateFail() throws Exception {
+        this.mockMvc.perform(get("http://localhost:" + port +
+                        "/api/v1/events?name=Festival&fromDate=2024-10-25&toDate=2024-12-31"))
+                .andDo(print())
+                .andExpectAll(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("Not valid fields"))
+                .andExpect(jsonPath("$.length()").value(3));
+    }
+
+    @WithMockUser
     @Test
     void getFilterEventsByNameAndDateSuccess() throws Exception {
         this.mockMvc.perform(get("http://localhost:" + port +
-                        "/api/v1/events?name=Festival&fromDate=2024-10-25&toDate=2024-12-31"))
+                        "/api/v1/events?name=Festival&fromDate=2025-10-25&toDate=2025-12-31"))
                 .andDo(print())
                 .andExpectAll(status().isOk())
                 .andExpect(jsonPath("$.length()").value(2));
     }
 
+    @WithAnonymousUser
+    @Test
+    void getFilterEventsByNameAndDateWithAnonymousUserFail() throws Exception {
+        this.mockMvc.perform(get("http://localhost:" + port +
+                        "/api/v1/events?name=Festival&fromDate=2025-10-25&toDate=2025-12-31"))
+                .andDo(print())
+                .andExpectAll(status().isUnauthorized());
+    }
+
+    @WithMockUser
     @Test
     void getAllEvents() throws Exception {
         this.mockMvc.perform(get("http://localhost:" + port + "/api/v1/events/all"))
@@ -61,6 +94,15 @@ class EventControllerTest extends TestContainers {
                 .andExpect(jsonPath("$.data[2].name").value("Festival THREE"));
     }
 
+    @WithAnonymousUser
+    @Test
+    void getAllEventsWithAnonymousUserFail() throws Exception {
+        this.mockMvc.perform(get("http://localhost:" + port + "/api/v1/events/all"))
+                .andDo(print())
+                .andExpectAll(status().isUnauthorized());
+    }
+
+    @WithMockUser
     @Test
     void getEventsRsByIdIsPresentSuccess() throws Exception {
         this.mockMvc.perform(get("http://localhost:" + port + "/api/v1/events/1"))
@@ -69,6 +111,15 @@ class EventControllerTest extends TestContainers {
                 .andExpect(jsonPath("$.data.name").value("Festival ONE"));
     }
 
+    @WithAnonymousUser
+    @Test
+    void getEventsRsByIdIsPresentWithAnonymousUserFail() throws Exception {
+        this.mockMvc.perform(get("http://localhost:" + port + "/api/v1/events/1"))
+                .andDo(print())
+                .andExpectAll(status().isUnauthorized());
+    }
+
+    @WithMockUser
     @Test
     void getEventsRsByIdIsNotPresentFail() throws Exception {
         this.mockMvc.perform(get("http://localhost:" + port + "/api/v1/events/100"))
@@ -76,8 +127,9 @@ class EventControllerTest extends TestContainers {
                 .andExpectAll(status().isNotFound());
     }
 
+    @WithMockUser
     @Test
-    void createEventsSucsess() throws Exception {
+    void createEventsSuccess() throws Exception {
         EventsRq eventsRq = EventsRq.builder()
                 .name("NewEvents")
                 .dates(LocalDate.now())
@@ -96,6 +148,25 @@ class EventControllerTest extends TestContainers {
                 .andExpect(jsonPath("$.data.locations.slug").value("msk"));
     }
 
+    @WithAnonymousUser
+    @Test
+    void createEventsWithAnonymousUserFail() throws Exception {
+        EventsRq eventsRq = EventsRq.builder()
+                .name("NewEvents")
+                .dates(LocalDate.now())
+                .locations("Moscow")
+                .price("500")
+                .build();
+        mapper.registerModule(new JavaTimeModule());
+
+        this.mockMvc.perform(post("http://localhost:" + port + "/api/v1/events")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(eventsRq)))
+                .andDo(print())
+                .andExpectAll(status().isUnauthorized());
+    }
+
+    @WithMockUser
     @Test
     void createEventsWithIsNotPresentLocationsFail() throws Exception {
         EventsRq eventsRq = EventsRq.builder()
@@ -113,6 +184,7 @@ class EventControllerTest extends TestContainers {
                 .andExpectAll(status().isBadRequest());
     }
 
+    @WithMockUser
     @Test
     void createEventsWithNotValidFieldsDatesFail() throws Exception {
         EventsRq eventsRq = EventsRq.builder()
@@ -130,6 +202,7 @@ class EventControllerTest extends TestContainers {
                 .andExpectAll(status().isBadRequest());
     }
 
+    @WithMockUser
     @Test
     void updateEventsSuccess() throws Exception {
         EventsRq eventsRq = EventsRq.builder()
@@ -146,6 +219,21 @@ class EventControllerTest extends TestContainers {
                 .andExpect(jsonPath("$.data.locations.slug").value("msk"));
     }
 
+    @WithAnonymousUser
+    @Test
+    void updateEventsWithAnonymousUserFail() throws Exception {
+        EventsRq eventsRq = EventsRq.builder()
+                .name("UpdateEvents")
+                .build();
+
+        this.mockMvc.perform(put("http://localhost:" + port + "/api/v1/events/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(eventsRq)))
+                .andDo(print())
+                .andExpectAll(status().isUnauthorized());
+    }
+
+    @WithMockUser
     @Test
     void updateEventsWithIsNotPresentLocationsFail() throws Exception {
         EventsRq eventsRq = EventsRq.builder()
@@ -159,6 +247,7 @@ class EventControllerTest extends TestContainers {
                 .andExpectAll(status().isBadRequest());
     }
 
+    @WithMockUser
     @Test
     void deleteEventsSuccess() throws Exception {
         this.mockMvc.perform(delete("http://localhost:" + port + "/api/v1/events/1"))
@@ -167,6 +256,15 @@ class EventControllerTest extends TestContainers {
                 .andExpect(jsonPath("$.data").value("Events with id 1 delete."));
     }
 
+    @WithAnonymousUser
+    @Test
+    void deleteEventsWithAnonymousUserFail() throws Exception {
+        this.mockMvc.perform(delete("http://localhost:" + port + "/api/v1/events/1"))
+                .andDo(print())
+                .andExpectAll(status().isUnauthorized());
+    }
+
+    @WithMockUser
     @Test
     void deleteEventsIsNotPresentIdFail() throws Exception {
         this.mockMvc.perform(delete("http://localhost:" + port + "/api/v1/events/100"))

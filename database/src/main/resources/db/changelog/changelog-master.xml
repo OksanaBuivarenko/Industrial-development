@@ -16,4 +16,16 @@
 
     <include file="create-changeset-events-table.xml" relativeToChangelogFile="true"/>
 
+    <changeSet id="3" author="Oxana">
+        <tagDatabase tag="create-users-and-roles"/>
+    </changeSet>
+
+    <include file="create-changeset-users-roles-tables.xml" relativeToChangelogFile="true"/>
+
+    <changeSet id="4" author="Oxana">
+        <tagDatabase tag="create-tokens"/>
+    </changeSet>
+
+    <include file="create-changeset-token-table.xml" relativeToChangelogFile="true"/>
+
 </databaseChangeLog>

@@ -8,6 +8,7 @@ import com.fintech.database.dto.response.EventsRs;
 import com.fintech.database.dto.response.PageRs;
 import com.fintech.database.service.EventsService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
@@ -15,7 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@SecurityRequirement(name = "Bearer Authentication")
 @Validated
 @RestController
 @RequiredArgsConstructor

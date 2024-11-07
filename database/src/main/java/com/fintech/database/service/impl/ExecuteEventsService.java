@@ -33,8 +33,8 @@ public class ExecuteEventsService implements HttpService<EventsDto> {
 
         var ref = new Object() {
             int pageNumber = 1;
-            final long actualSince = System.currentTimeMillis()/1000L;
-            final long actualUntil = Instant.now().plus(7,ChronoUnit.DAYS).getEpochSecond();
+            final long actualSince = System.currentTimeMillis() / 1000L;
+            final long actualUntil = Instant.now().plus(7, ChronoUnit.DAYS).getEpochSecond();
         };
 
         var isLastPage = true;

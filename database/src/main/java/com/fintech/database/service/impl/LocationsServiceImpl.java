@@ -85,7 +85,6 @@ public class LocationsServiceImpl implements LocationsService {
                 .orElseThrow(() -> new ObjectNotFoundException("Locations", name));
     }
 
-
     @Override
     public Locations getLocationsByNameFromDto(LocationsDto locationsDto) {
         Locations locations = locationsMapper.toEntityFromKudagoDto(locationsDto);
