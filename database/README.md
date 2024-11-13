@@ -1,5 +1,11 @@
 # Database
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=OksanaBuivarenko_Industrial-development&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=OksanaBuivarenko_Industrial-development)
+[![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=OksanaBuivarenko_Industrial-development)](https://sonarcloud.io/summary/new_code?id=OksanaBuivarenko_Industrial-development)
+[![SonarQube Cloud](https://sonarcloud.io/images/project_badges/sonarcloud-highlight.svg)](https://sonarcloud.io/summary/new_code?id=OksanaBuivarenko_Industrial-development)
+[![Maintainability](https://api.codeclimate.com/v1/badges/f907a96318b8863f8c3d/maintainability)](https://codeclimate.com/github/OksanaBuivarenko/Industrial-development/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/f907a96318b8863f8c3d/test_coverage)](https://codeclimate.com/github/OksanaBuivarenko/Industrial-development/test_coverage)
+
 Database - это учебный проект на Java, созданный для демонстрации работы с базой данных PostgreSQL, аутентификации
 и авторизации с использованием Spring Security и JWT.
 
