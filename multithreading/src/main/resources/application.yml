@@ -1,0 +1,8 @@
+url:
+  base_url: https://kudago.com/public-api/
+  events: v1.4/events/
+
+
+semaphore:
+  permits: 3
+  fair: true

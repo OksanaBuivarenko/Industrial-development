@@ -7,7 +7,7 @@ import java.util.List;
 @SpringBootApplication
 public class Main {
     public static void main(String[] args) {
-        CustomLinkedList<String> list = new CustomLinkedList<>();
+        CustomLinkedListImpl<String> list = new CustomLinkedListImpl<>();
 
         list.addEnd("Word-1");
         list.addEnd("Word-2");
@@ -27,16 +27,16 @@ public class Main {
         System.out.println(list.contains("Word-1"));
 
         System.out.println("List size before add newList - " + list.getSize());
-        List<String> newList = List.of("Word5", "Word6", "Word7");
+        List<String> newList = List.of("Word-5", "Word-6", "Word-7");
         list.addAll(newList);
         System.out.println("List size after add newList - " + list.getSize());
         System.out.println(list.toString());
 
         System.out.println("List size before add newLinkedList - " + list.getSize());
-        CustomLinkedList<String> newLinkedList = new CustomLinkedList<>();
-        newLinkedList.addEnd("Word8");
-        newLinkedList.addEnd("Word9");
-        newLinkedList.addEnd("Word10");
+        CustomLinkedListImpl<String> newLinkedList = new CustomLinkedListImpl<>();
+        newLinkedList.addEnd("Word-8");
+        newLinkedList.addEnd("Word-9");
+        newLinkedList.addEnd("Word-10");
         list.addAll(newLinkedList);
         System.out.println("List size after add newLinkedList - " + list.getSize());
 
@@ -46,8 +46,8 @@ public class Main {
         List<String> l2 = List.of("S3", "S4");
         List<String> l3 = List.of("S5", "S6", "S7");
         List<List<String>> lists = List.of(l1, l2, l3);
-        CustomLinkedList<String> reduceList = lists.stream().reduce(
-                new CustomLinkedList<>(),
+        CustomLinkedListImpl<String> reduceList = lists.stream().reduce(
+                new CustomLinkedListImpl<>(),
                 (acc, el) -> {
                     acc.addAll(el);
                     return acc;
@@ -59,8 +59,8 @@ public class Main {
         );
         System.out.println(reduceList.toString());
 
-        CustomLinkedList<String> reduceList1 = l1.stream().reduce(
-                new CustomLinkedList<>(),
+        CustomLinkedListImpl<String> reduceList1 = l1.stream().reduce(
+                new CustomLinkedListImpl<>(),
                 (acc, el) -> {
                     acc.addEnd(el);
                     return acc;
@@ -71,5 +71,11 @@ public class Main {
                 }
         );
         System.out.println(reduceList1.toString());
+
+
+        System.out.println();
+        System.out.println("CustomLinkedList iterator forEachRemaining: ");
+        CustomIterator<String> iterator = list.iterator();
+        iterator.forEachRemaining(System.out::println);
     }
 }

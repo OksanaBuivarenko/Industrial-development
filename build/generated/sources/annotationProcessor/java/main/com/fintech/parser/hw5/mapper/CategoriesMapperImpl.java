@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-10-04T11:49:02+0300",
+    date = "2024-11-14T00:19:42+0300",
     comments = "version: 1.6.2, compiler: IncrementalProcessingEnvironment from gradle-language-java-8.8.jar, environment: Java 17.0.6 (Oracle Corporation)"
 )
 @Component
@@ -22,6 +22,7 @@ public class CategoriesMapperImpl implements CategoriesMapper {
 
         CategoriesRs categoriesRs = new CategoriesRs();
 
+        categoriesRs.setId( categories.getId() );
         categoriesRs.setSlug( categories.getSlug() );
         categoriesRs.setName( categories.getName() );
 

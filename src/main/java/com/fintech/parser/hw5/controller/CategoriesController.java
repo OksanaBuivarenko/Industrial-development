@@ -14,7 +14,6 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/places/categories")
-
 public class CategoriesController {
 
     private final CategoriesService categoriesService;
@@ -37,6 +36,11 @@ public class CategoriesController {
     @PutMapping("/{id}")
     public CategoriesRs updateCategory(@PathVariable Long id, @RequestBody CategoriesRq categoriesRq) {
         return categoriesService.updateCategory(id, categoriesRq);
+    }
+
+    @PutMapping("/restore/{id}")
+    public CategoriesRs restoreCategory(@PathVariable Long id) {
+        return categoriesService.restoreCategory(id);
     }
 
     @DeleteMapping("/{id}")
