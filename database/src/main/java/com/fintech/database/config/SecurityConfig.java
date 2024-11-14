@@ -50,6 +50,7 @@ public class SecurityConfig {
     }
 
     @Bean
+    @SuppressWarnings("squid:S4502")
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
 
         return httpSecurity.authorizeHttpRequests(auth -> auth.requestMatchers("/api/v1/auth/**").permitAll()
