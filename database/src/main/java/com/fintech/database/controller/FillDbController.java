@@ -5,7 +5,7 @@ import com.fintech.database.service.FillDbService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,7 +18,7 @@ public class FillDbController {
     private final FillDbService fillDbService;
 
     @Operation(summary = "Заполнение бд данными из сервиса kudago")
-    @GetMapping()
+    @PostMapping()
     public PageRs<String> getFilterEvents() {
         return fillDbService.fillDb();
     }

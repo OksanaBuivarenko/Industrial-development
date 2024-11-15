@@ -4,7 +4,19 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-    <changeSet id="2" author="Oxana">
+    <changeSet id="1" author="Oxana">
+        <createTable tableName="locations">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="slug" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
         <createTable tableName="events">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true"/>
@@ -19,9 +31,18 @@
                 <constraints nullable="false"/>
             </column>
             <column name="locations_id" type="int">
-                <constraints foreignKeyName="events_locations_id" references="locations(id)"/>
+                <constraints nullable="false"/>
             </column>
         </createTable>
+
+
+        <addForeignKeyConstraint  baseColumnNames="locations_id"
+                                  baseTableName="events"
+                                  constraintName="fk_location_events"
+                                  onDelete="CASCADE"
+                                  referencedColumnNames="id"
+                                  referencedTableName="locations"/>
+
     </changeSet>
 
 </databaseChangeLog>

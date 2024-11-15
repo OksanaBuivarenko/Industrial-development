@@ -5,15 +5,9 @@
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
 
     <changeSet id="1" author="Oxana">
-        <tagDatabase tag="create-locations"/>
+        <tagDatabase tag="create-locations-and-events"/>
     </changeSet>
 
-    <include file="create-changeset-locations-table.xml" relativeToChangelogFile="true"/>
-
-    <changeSet id="2" author="Oxana">
-        <tagDatabase tag="create-events"/>
-    </changeSet>
-
-    <include file="create-changeset-events-table.xml" relativeToChangelogFile="true"/>
+    <include file="create-changeset-locations-and-events-table.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

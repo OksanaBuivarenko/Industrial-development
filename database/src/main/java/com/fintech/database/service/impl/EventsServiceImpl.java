@@ -6,14 +6,12 @@ import com.fintech.database.dto.request.EventsRq;
 import com.fintech.database.dto.response.EventsRs;
 import com.fintech.database.dto.response.PageRs;
 import com.fintech.database.entity.Events;
-import com.fintech.database.entity.Events_;
 import com.fintech.database.entity.Locations;
-import com.fintech.database.entity.Locations_;
 import com.fintech.database.exception.ObjectNotFoundException;
 import com.fintech.database.exception.RelatedEntityNotFound;
 import com.fintech.database.mapper.EventsMapper;
 import com.fintech.database.repository.EventsRepository;
-import com.fintech.database.repository.Specs;
+import com.fintech.database.repository.EventsSpecification;
 import com.fintech.database.service.EventsService;
 import com.fintech.database.service.LocationsService;
 import lombok.RequiredArgsConstructor;
@@ -37,11 +35,11 @@ public class EventsServiceImpl implements EventsService {
     @Override
     public PageRs<List<EventsRs>> getFilterEventsRs(EventsFilterRq eventsFilterRq) {
         List<Events> list = eventsRepository.findAll(
-                Specification.where(Specs.like(Events_.name, eventsFilterRq.getName()))
-                        .and(Specs.eq(Events_.locations, Locations_.name, eventsFilterRq.getLocations()))
-                        .and(Specs.greaterEq(Events_.dates, eventsFilterRq.getFromDate()))
-                        .and(Specs.lessEq(Events_.dates, eventsFilterRq.getToDate())),
-                        Sort.by(Sort.Direction.ASC, "dates"));
+                Specification.where(EventsSpecification.nameLike(eventsFilterRq.getName()))
+                        .and(EventsSpecification.equelsLocationName(eventsFilterRq.getLocations()))
+                        .and(EventsSpecification.greaterEqDateFrom(eventsFilterRq.getFromDate()))
+                        .and(EventsSpecification.lessEqDateTo(eventsFilterRq.getToDate())),
+                Sort.by(Sort.Direction.ASC, "dates"));
         return PageRs.<List<EventsRs>>builder()
                 .data(list.stream().map(eventsMapper::toDto).collect(Collectors.toList()))
                 .build();
@@ -61,7 +59,7 @@ public class EventsServiceImpl implements EventsService {
     }
 
     public Events getEventsById(Long id) {
-        return eventsRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("Events", id));
+        return eventsRepository.find(id).orElseThrow(() -> new ObjectNotFoundException("Events", id));
     }
 
     @Override

@@ -16,13 +16,13 @@ import java.util.List;
 @Table(name = "locations")
 public class Locations {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     private String slug;
 
     private String name;
 
-    @OneToMany(mappedBy = "locations", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "locations", fetch = FetchType.LAZY)
     private List<Events> events;
 }

@@ -12,7 +12,9 @@ public interface LocationsRepository extends JpaRepository<Locations, Long> {
     @Query("SELECT locations FROM Locations locations JOIN FETCH locations.events WHERE locations.id = :id")
     Optional<Locations> find(@Param("id") Long id);
 
+    @Query("SELECT locations FROM Locations locations JOIN FETCH locations.events WHERE locations.name = :name")
     Optional<Locations> findByName(String name);
 
+    @Query("SELECT locations FROM Locations locations JOIN FETCH locations.events WHERE locations.slug = :slug")
     Optional<Locations> findBySlug(String slug);
 }

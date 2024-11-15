@@ -45,7 +45,7 @@ class EventControllerTest extends TestContainers {
     @Test
     void getFilterEventsByNameAndDateSuccess() throws Exception {
         this.mockMvc.perform(get("http://localhost:" + port +
-                        "/api/v1/events?name=Festival&fromDate=2024-10-25&toDate=2024-12-31"))
+                        "/api/v1/events?name=Festival&fromDate=2024-12-25&toDate=2024-12-31"))
                 .andDo(print())
                 .andExpectAll(status().isOk())
                 .andExpect(jsonPath("$.length()").value(2));
