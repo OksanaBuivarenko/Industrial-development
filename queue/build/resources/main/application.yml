@@ -1,0 +1,10 @@
+app:
+  kafka:
+    kafkaMessageTopic: "message-topic"
+    kafkaMessageGroupId: "kafka-message-group-id"
+    bootstrapServers: ${BOOTSTRAP_SERVERS:localhost:9092}
+
+spring:
+  rabbitmq:
+    password: password
+    username: user

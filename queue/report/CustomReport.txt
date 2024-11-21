@@ -1,0 +1,11 @@
+
+loadBalancingKafka:  throughput = 3.1562751642491778, latency = 0.46223798;
+loadBalancingPlusMultipleConsumersKafka:  throughput = 2.053818000424976, latency = 0.5884611;
+multipleConsumersKafka:  throughput = 2.406886101135348, latency = 0.41944978;
+simpleKafka:  throughput = 6.178215668582262, latency = 0.30595434285714285;
+stressTestKafka:  throughput = 0.46100466423774067, latency = 2.30388095;
+loadBalancingPlusMultipleConsumersRabbit:  throughput = 49.60761861900922, latency = 0.017135930508474576;
+loadBalancingRabbit:  throughput = 40.11696218315564, latency = 0.01758157803030303;
+multipleConsumersRabbit:  throughput = 67.96002700344548, latency = 0.01570084921875;
+simpleRabbit:  throughput = 143.08008092768355, latency = 0.00978880536585366;
+stressTestRabbit:  throughput = 15.82213077030637, latency = 0.05086916;
