@@ -1,0 +1,57 @@
+# Database
+
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=OksanaBuivarenko_Industrial-development&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=OksanaBuivarenko_Industrial-development)
+[![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=OksanaBuivarenko_Industrial-development)](https://sonarcloud.io/summary/new_code?id=OksanaBuivarenko_Industrial-development)
+[![SonarQube Cloud](https://sonarcloud.io/images/project_badges/sonarcloud-highlight.svg)](https://sonarcloud.io/summary/new_code?id=OksanaBuivarenko_Industrial-development)
+[![Maintainability](https://api.codeclimate.com/v1/badges/f907a96318b8863f8c3d/maintainability)](https://codeclimate.com/github/OksanaBuivarenko/Industrial-development/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/f907a96318b8863f8c3d/test_coverage)](https://codeclimate.com/github/OksanaBuivarenko/Industrial-development/test_coverage)
+
+Database - это учебный проект на Java, созданный для демонстрации работы с базой данных PostgreSQL, аутентификации
+и авторизации с использованием Spring Security и JWT.
+
+В основе лежит АПИ для работы с событиями и локациями (городами).
+
+EventController позволяет осуществлять CRUD операции с событиями, а также реализует фильтр для получения событий на
+основе пользовательских пожеланий.
+
+LocationsController реализует CRUD операции с городами.
+
+FillDbController заполняет базу данных событиями и городами, получаемыми из сервиса kudago.
+
+UserController реализует CRUD операции с пользователями, UserRoleController - с пользовательскими ролями.
+
+AuthController реализует возможности регистрации, логина, логаута и изменения пароля.
+
+При старте приложения DataInitializer добавляет в базу данных роли USER и ADMIN, а также создает дефолтного
+пользователя Admin.
+
+Все пользователи при регистрации получают роль USER и сохраняться в базе. Далее Admin может добавить пользователям
+новую роль.
+Для хранения паролей в базе данных используется механизм хеширования bcrypt.
+
+При успешном входе в систему пользователь получает токен, который сохраняется в базе данных и используется для
+последующих запросов. Токен выдается по умолчанию на срок 10 минут. Если пользователь нажал "запомнить меня" - токен
+запоминается на 30 дней.
+
+При логауте токен удаляется из базы данных. Также ежедневно по крону удаляются токены с истекшим сроком действия.
+Для изменения пароля пользователь запрашивает код подтверждения, который отправляется ему на электронную почту.
+В качестве коа подтверждения используется заглушка с кодом "0000".
+
+EventController, LocationsController, FillDbController доступны только авторизованным пользователям. UserRoleController
+доступен для пользователей с ролью ADMIN. Эндпоинты UserController для CRUD операций доступны также пользователям с
+ролью ADMIN, эндпоинт "/hello" выводит приветственную информацию и доступен пользователям с ролью USER.
+Эндпоинты AuthController для регистрации и логина доступны без авторизации, эндпоинты для логаута и изменения пароля
+доступны только авторизованным пользователям.
+
+Логика работы приложения протестирована с помощью интеграционных тестов при помощи mockMvc. Для тестирования работы 
+аутентификации и авторизации используются аннотации @WithMockUser, @WithAnonymousUser, @WithUserDetails.
+
+## Начало работы
+1. Установите на свой компьютер [JDK](https://www.oracle.com/cis/java/technologies/downloads/) и среду разработки
+   [IntelliJ IDEA](https://www.jetbrains.com/ru-ru/idea/download/?section=windows), если они ещё не установлены.
+2. Загрузите проект-заготовку из Git-репозитория.
+3. Запустите базу данных Postgres, выполнив в терминале команду `docker compose up`.
+4. Запустите `DatabaseApplication`.
+
+После запуска всех сервисов документацию по API можно увидеть в [Swagger](http://localhost:8080/swagger-ui/index.html).  
+Для тестирования REST-API можно использовать [Postman](https://www.postman.com/downloads/).
