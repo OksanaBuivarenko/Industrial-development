@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern> %d{dd-MM-yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{36}.%M - %msg %X%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="SAVE-TO-FILE" class="ch.qos.logback.core.FileAppender">
+        <file>C:\Users\Admin\Desktop\elk\logstash_ingest_data\application.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%d{dd-MM-yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{36}.%M - %msg %X%n</Pattern>
+        </encoder>
+    </appender>
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="SAVE-TO-FILE"/>
+    </root>
+</configuration>
