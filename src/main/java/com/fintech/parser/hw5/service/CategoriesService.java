@@ -21,5 +21,7 @@ public interface CategoriesService {
 
     CategoriesRs updateCategory(Long id, CategoriesRq categoriesRq);
 
+    CategoriesRs restoreCategory(Long id);
+
     DeleteRs deleteCategory(Long id);
 }
